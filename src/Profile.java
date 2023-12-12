@@ -16,22 +16,13 @@ public class Profile extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Profile frame = new Profile("nickname");
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        
     }
 
     /**
      * Create the frame.
      */
-    public Profile(String userName) {
+    public Profile(String userName,String imagePath,String loginNickname) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         contentPane = new JPanel();
@@ -46,16 +37,22 @@ public class Profile extends JFrame {
         contentPane.add(panel);
         panel.setLayout(null);
 
-        setProfile(userName);
-        buttonProfile();
+        setProfile(userName,imagePath);
+        buttonProfile(userName,imagePath,loginNickname);
 
     }
 
     //프로필 사진, 이름, 즐겨 찾기
-    private void setProfile(String userNickname){
+    private void setProfile(String userNickname,String imagePath){
         //프로필 사진 출력 수정
-        JPanel panel_1 = new JPanel();
+    	JPanel panel_1 = new JPanel();
         panel_1.setBounds(130, 320, 100, 100);
+
+        // imagePath를 이용하여 이미지를 설정
+        ImageIcon imageIcon = new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+        JLabel imageLabel = new JLabel(imageIcon);
+        panel_1.add(imageLabel);
+
         panel.add(panel_1);
 
         //클릭된 프로필 이름 출력 수정
@@ -98,7 +95,7 @@ public class Profile extends JFrame {
     }
 
     //프로필 이미지 하단 버튼 2개 ( 1:1채팅, 프로필 편집 )
-    private void buttonProfile(){
+    private void buttonProfile(String userName,String imagePath,String loginName){
         //1:1 채팅 버튼 이미지 변경
         JButton startChat = new JButton("N");
         startChat.setBorderPainted(false);
@@ -110,6 +107,12 @@ public class Profile extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 JOptionPane.showMessageDialog(panel, "1:1 채팅", "Message",JOptionPane.PLAIN_MESSAGE );
+                
+                ChatClient chatClient1 = new ChatClient(userName);
+                ChatClient chatClient2 = new ChatClient(loginName);
+                
+                chatClient1.setVisible(true);
+                chatClient2.setVisible(true);
             }
         });
 
@@ -123,7 +126,7 @@ public class Profile extends JFrame {
         profileChange.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                modifyProfile newFrame = new modifyProfile();
+                modifyProfile newFrame = new modifyProfile(userName,imagePath);
                 newFrame.setVisible(true);
             }
         });

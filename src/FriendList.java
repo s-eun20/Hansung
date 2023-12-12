@@ -37,25 +37,44 @@ public class FriendList extends JFrame {
         panel.removeAll();
 
         int currentY = 63;
+        
 
-        panel_1 = createFriendPanel("src/image/상상부기 8.png", loadLoggedInUserNickname());
-        panel_1.setBounds(84, currentY, 267, 46);
+        panel_1 = createFriendPanel(loadLoggedInUserImagePath(), loadLoggedInUserNickname());
+        panel_1.setBounds(81, 60, 267, 46);
         panel.add(panel_1);
         
         JTextPane textPane = new JTextPane();
         textPane.setEditable(false);
         textPane.setFont(new Font("굴림", Font.BOLD, 31));
         textPane.setText("친구목록");
-        textPane.setBounds(81, 10, 146, 46);
+        textPane.setBounds(81, 4, 146, 46);
         panel.add(textPane);
+        
+        JPanel panel_2 = new JPanel();
+        panel_2.setLayout(null);
+        panel_2.setBounds(0, 0, 60, 640);
+        panel.add(panel_2);
+        
+        JButton mainButton = new JButton("-");
+        mainButton.setFocusPainted(false);
+        mainButton.setBorderPainted(false);
+        mainButton.setBackground(Color.WHITE);
+        mainButton.setBounds(10, 35, 40, 40);
+        panel_2.add(mainButton);
+        
+        JButton chatListButton = new JButton("-");
+        chatListButton.setFocusPainted(false);
+        chatListButton.setBorderPainted(false);
+        chatListButton.setBackground(Color.WHITE);
+        chatListButton.setBounds(10, 85, 40, 40);
+        panel_2.add(chatListButton);
         currentY += 50;
 
         List<String> otherUserNicknames = loadOtherUserNicknames();
         for (int i = 0; i < otherUserNicknames.size(); i++) {
-            String imagePath = "src/image/상상부기 " + (i + 2) + ".png";
             String otherUserNickname = otherUserNicknames.get(i);
 
-            JPanel friendPanel = createFriendPanel(imagePath, otherUserNickname);
+            JPanel friendPanel = createFriendPanel(loadUserImagePath(otherUserNickname), otherUserNickname);
             friendPanel.setBounds(84, currentY, 267, 46);
             panel.add(friendPanel);
             currentY += 50;
@@ -69,6 +88,30 @@ public class FriendList extends JFrame {
             }
         });
     }
+    private String loadLoggedInUserImagePath() {
+        return loadImagePathFromDatabase(loadLoggedInUserNickname());
+    }
+
+    private String loadUserImagePath(String userNickname) {
+        return loadImagePathFromDatabase(userNickname);
+    }
+
+    private String loadImagePathFromDatabase(String nickname) {
+        String query = "SELECT image_path FROM users WHERE nickname = ?";
+        try (Connection connection = connectToDatabase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, nickname);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("image_path");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 
     private String loadLoggedInUserNickname() {
         String query = "SELECT nickname FROM users WHERE email = ?";
@@ -103,6 +146,28 @@ public class FriendList extends JFrame {
         }
         return nicknames;
     }
+    
+    
+    private void saveImagePathToDatabase(String imagePath, String nickname) {
+    	
+        String query = "UPDATE users SET image_path = ? WHERE nickname = ?";
+
+        try (Connection connection = connectToDatabase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, imagePath);
+            preparedStatement.setString(2, nickname);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("이미지 경로가 업데이트되었습니다.");
+            } else {
+                System.out.println("이미지 경로 업데이트에 실패했습니다.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private JPanel createFriendPanel(String imagePath, String nickname) {
         JPanel friendPanel = new JPanel();
@@ -117,14 +182,20 @@ public class FriendList extends JFrame {
         JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(41, 36, Image.SCALE_DEFAULT)));
         iconLabel.setBounds(12, 10, 41, 30);
 
-        JButton profileButton = new JButton("프로필");
-        profileButton.setBounds(164, 10, 91, 23);
-        profileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openProfile(nickname);
-            }
-        });
+        JButton profileButton;
+        
+        // 프로필 수정 버튼 추가 및 이벤트 처리
+       
+            profileButton = new JButton("프로필");
+            profileButton.setBounds(164, 10, 91, 23);
+            profileButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    openProfile(nickname,imagePath,loadLoggedInUserNickname());
+                }
+            });
+        
+        
         friendPanel.setLayout(null);
 
         friendPanel.add(textPane);
@@ -134,8 +205,11 @@ public class FriendList extends JFrame {
         return friendPanel;
     }
 
-    private void openProfile(String userNickname) {
-        Profile profileWindow = new Profile(userNickname);
+   
+
+
+    private void openProfile(String userNickname,String imagePath,String login) {
+        Profile profileWindow = new Profile(userNickname,imagePath,login);
         profileWindow.setVisible(true);
     }
 
