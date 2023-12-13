@@ -21,7 +21,7 @@ public class FriendList extends JFrame {
 
     public FriendList(String currentUserEmail) {
         this.currentUserEmail = currentUserEmail;
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -36,38 +36,56 @@ public class FriendList extends JFrame {
         
         panel.removeAll();
 
-        int currentY = 63;
+        int currentY = 119;
         
 
         panel_1 = createFriendPanel(loadLoggedInUserImagePath(), loadLoggedInUserNickname());
-        panel_1.setBounds(81, 60, 267, 46);
+        panel_1.setBounds(72, 63, 267, 46);
         panel.add(panel_1);
         
-        JTextPane textPane = new JTextPane();
-        textPane.setEditable(false);
-        textPane.setFont(new Font("굴림", Font.BOLD, 31));
-        textPane.setText("친구목록");
-        textPane.setBounds(81, 4, 146, 46);
-        panel.add(textPane);
-        
         JPanel panel_2 = new JPanel();
+        panel_2.setBackground(new Color(224, 240, 254));
         panel_2.setLayout(null);
         panel_2.setBounds(0, 0, 60, 640);
         panel.add(panel_2);
         
-        JButton mainButton = new JButton("-");
+        JButton mainButton = new JButton("");
+        mainButton.setIcon(new ImageIcon(FriendList.class.getResource("/image/free-icon-person-7542670.png")));
         mainButton.setFocusPainted(false);
         mainButton.setBorderPainted(false);
-        mainButton.setBackground(Color.WHITE);
+        mainButton.setBackground(new Color(224, 240, 254));
         mainButton.setBounds(10, 35, 40, 40);
         panel_2.add(mainButton);
         
-        JButton chatListButton = new JButton("-");
+        JButton chatListButton = new JButton("");
+        chatListButton.setIcon(new ImageIcon(FriendList.class.getResource("/image/free-icon-chat-5962500.png")));
         chatListButton.setFocusPainted(false);
         chatListButton.setBorderPainted(false);
-        chatListButton.setBackground(Color.WHITE);
+        chatListButton.setBackground(new Color(224, 240, 254));
         chatListButton.setBounds(10, 85, 40, 40);
         panel_2.add(chatListButton);
+        
+        JTextPane textPane_1 = new JTextPane();
+        textPane_1.setText("나");
+        textPane_1.setFont(new Font("Dialog", Font.BOLD, 22));
+        textPane_1.setEditable(false);
+        textPane_1.setBounds(72, 20, 39, 33);
+        panel.add(textPane_1);
+        
+        JTextPane textPane_1_1 = new JTextPane();
+        textPane_1_1.setText("친구");
+        textPane_1_1.setFont(new Font("Dialog", Font.BOLD, 22));
+        textPane_1_1.setEditable(false);
+        textPane_1_1.setBounds(72, 119, 60, 33);
+        panel.add(textPane_1_1);
+        
+        chatListButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	ChatList list = new ChatList(currentUserEmail,loadLoggedInUserNickname());
+            	list.setVisible(true);
+            	FriendList.this.dispose();
+            }
+        });
         currentY += 50;
 
         List<String> otherUserNicknames = loadOtherUserNicknames();
@@ -171,7 +189,7 @@ public class FriendList extends JFrame {
 
     private JPanel createFriendPanel(String imagePath, String nickname) {
         JPanel friendPanel = new JPanel();
-        friendPanel.setBackground(new Color(221, 244, 255));
+        friendPanel.setBackground(new Color(224, 240, 254));
 
         JTextPane textPane = new JTextPane();
         textPane.setBounds(56, 0, 72, 27);

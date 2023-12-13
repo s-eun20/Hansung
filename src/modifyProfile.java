@@ -37,7 +37,7 @@ public class modifyProfile extends JFrame {
      */
     public modifyProfile(String userName, String imagePath) {
     	
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(150, 150, 310, 470);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,6 +65,7 @@ public class modifyProfile extends JFrame {
         panel.add(textPane);
 
         imagePanel = new JPanel();
+        imagePanel.setBackground(new Color(255, 255, 255));
         imagePanel.setBounds(103, 95, 90, 90);
 
         // imagePath를 이용하여 이미지를 설정

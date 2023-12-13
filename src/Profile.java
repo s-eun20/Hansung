@@ -23,7 +23,7 @@ public class Profile extends JFrame {
      * Create the frame.
      */
     public Profile(String userName,String imagePath,String loginNickname) {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -47,6 +47,7 @@ public class Profile extends JFrame {
         //프로필 사진 출력 수정
     	JPanel panel_1 = new JPanel();
         panel_1.setBounds(130, 320, 100, 100);
+        panel_1.setBackground(new Color(204, 220, 230));
 
         // imagePath를 이용하여 이미지를 설정
         ImageIcon imageIcon = new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
@@ -61,7 +62,7 @@ public class Profile extends JFrame {
         userName.setBackground(new Color(204, 220, 230));
         userName.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
         userName.setText(userNickname);
-        userName.setBounds(152, 420, 60, 31);
+        userName.setBounds(123, 430, 117, 31);
         panel.add(userName);
 
         //프로필 즐겨 찾기 기능 버튼 생성
@@ -97,7 +98,9 @@ public class Profile extends JFrame {
     //프로필 이미지 하단 버튼 2개 ( 1:1채팅, 프로필 편집 )
     private void buttonProfile(String userName,String imagePath,String loginName){
         //1:1 채팅 버튼 이미지 변경
-        JButton startChat = new JButton("N");
+        JButton startChat = new JButton("");
+        startChat.setBackground(new Color(204, 220, 230));
+        startChat.setIcon(new ImageIcon(Profile.class.getResource("/image/free-icon-chatting-3721935.png")));
         startChat.setBorderPainted(false);
         startChat.setFocusPainted(false);
         startChat.setBounds(100, 535, 50, 50);
@@ -108,16 +111,18 @@ public class Profile extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 JOptionPane.showMessageDialog(panel, "1:1 채팅", "Message",JOptionPane.PLAIN_MESSAGE );
                 
-                ChatClient chatClient1 = new ChatClient(userName);
-                ChatClient chatClient2 = new ChatClient(loginName);
-                
+                ChatClient chatClient1 = new ChatClient(userName,userName);
                 chatClient1.setVisible(true);
-                chatClient2.setVisible(true);
+      
+                
+                
             }
         });
 
         //프로필 편집 버튼 이미지 변경
-        JButton profileChange = new JButton("N");
+        JButton profileChange = new JButton("");
+        profileChange.setBackground(new Color(204, 220, 230));
+        profileChange.setIcon(new ImageIcon(Profile.class.getResource("/image/free-icon-edit-3597088.png")));
         profileChange.setFocusPainted(false);
         profileChange.setBorderPainted(false);
         profileChange.setBounds(210, 535, 50, 50);
@@ -134,7 +139,7 @@ public class Profile extends JFrame {
         JTextPane textPane = new JTextPane();
         textPane.setBackground(new Color(204, 220, 230));
         textPane.setEditable(false);
-        textPane.setText("1:1 채팅");
+        textPane.setText("1:1채팅");
         textPane.setBounds(99, 590, 50, 21);
         panel.add(textPane);
 
