@@ -62,7 +62,7 @@ public class Profile extends JFrame {
         userName.setBackground(new Color(204, 220, 230));
         userName.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
         userName.setText(userNickname);
-        userName.setBounds(123, 430, 117, 31);
+        userName.setBounds(152, 427, 117, 31);
         panel.add(userName);
 
         //프로필 즐겨 찾기 기능 버튼 생성
@@ -111,7 +111,7 @@ public class Profile extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 JOptionPane.showMessageDialog(panel, "1:1 채팅", "Message",JOptionPane.PLAIN_MESSAGE );
                 
-                ChatClient chatClient1 = new ChatClient(userName,userName);
+                ChatClient chatClient1 = new ChatClient(loginName,loginName+","+userName+",");
                 chatClient1.setVisible(true);
       
                 
@@ -133,6 +133,7 @@ public class Profile extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 modifyProfile newFrame = new modifyProfile(userName,imagePath);
                 newFrame.setVisible(true);
+                setVisible(false);
             }
         });
 

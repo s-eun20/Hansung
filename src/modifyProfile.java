@@ -31,6 +31,7 @@ public class modifyProfile extends JFrame {
     private JButton cancelButton;
     private String originalUserName; // 추가: 기존 사용자 이름 저장
     private JLabel imageLabel;  // 추가: 이미지를 나타낼 라벨
+    private String newImagePath;
 
     /**
      * Create the frame.
@@ -50,6 +51,7 @@ public class modifyProfile extends JFrame {
     }
 
     private void panel(String loginUserName, String imagePath) {
+    	this.newImagePath=imagePath;
         JPanel panel = new JPanel();
         panel.setBackground(new Color(255, 255, 255));
         panel.setBounds(0, 0, 296, 443);
@@ -103,6 +105,12 @@ public class modifyProfile extends JFrame {
 
                 // 데이터베이스 업데이트
                 updateUserNameInDatabase(originalUserName, newUserName);
+                
+                JFrame Profile = new Profile(newUserName,newImagePath,loginUserName);
+                Profile.setVisible(true);
+        
+                
+                
 
                 // 수정창 닫기
                 dispose();
@@ -169,7 +177,9 @@ public class modifyProfile extends JFrame {
     // 데이터베이스에서 이미지 경로 업데이트
     private void updateImagePathInDatabase(String username, String imagePath) {
         String query = "UPDATE users SET image_path = ? WHERE nickname = ?";
-
+        
+        this.newImagePath=imagePath;
+        System.out.println(newImagePath);
         try (Connection connection = connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, imagePath);

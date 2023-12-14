@@ -13,6 +13,8 @@ import java.util.List;
 public class ChatList extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+    private String loginemail;
+    private String loginNickname;
 
     /**
      * Launch the application.
@@ -37,6 +39,8 @@ public class ChatList extends JFrame {
      * Create the frame.
      */
     public ChatList(String loginEmail,String loginNickname) {
+    	this.loginemail=loginEmail;
+    	this.loginNickname=loginNickname;
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         contentPane = new JPanel();
@@ -314,6 +318,7 @@ public class ChatList extends JFrame {
 
         // Save selected nicknames to the database
         saveChatRoomToDatabase(textContent.toString(), loginNickname);
+        afterCreateChatPanel(textContent.toString(), loginNickname);
 
         // contentPane를 다시 그리도록 요청
         contentPane.revalidate();
@@ -321,7 +326,23 @@ public class ChatList extends JFrame {
     }
 
 
-    // friendPanel 클릭 시 ChatClient 실행 및 textContent 전달
+    private void afterCreateChatPanel(String chatRoomName, String loginNickname) {
+
+        // Load updated chat rooms from the database and refresh the UI
+       
+    	JFrame chatList = new ChatList(loginemail,this.loginNickname);
+    	chatList.setVisible(true);
+    	dispose();
+        // contentPane를 다시 그리도록 요청
+        contentPane.revalidate();
+        contentPane.repaint();
+		
+	}
+
+
+
+
+	// friendPanel 클릭 시 ChatClient 실행 및 textContent 전달
     private void openChatClient(String RoomName, String loginNickname) {
         // ChatClient 실행 및 필요한 정보(textContent 등) 전달
         ChatClient chatClient = new ChatClient(loginNickname, RoomName);  // 예시로 "seungeun" 사용
