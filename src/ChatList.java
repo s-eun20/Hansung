@@ -324,9 +324,6 @@ public class ChatList extends JFrame {
 
 
     private void afterCreateChatPanel(String chatRoomName, String loginNickname) {
-
-        // Load updated chat rooms from the database and refresh the UI
-       
     	JFrame chatList = new ChatList(loginemail,this.loginNickname);
     	chatList.setVisible(true);
     	dispose();
@@ -342,7 +339,7 @@ public class ChatList extends JFrame {
 	// friendPanel 클릭 시 ChatClient 실행 및 textContent 전달
     private void openChatClient(String RoomName, String loginNickname) {
         // ChatClient 실행 및 필요한 정보(textContent 등) 전달
-        ChatClient chatClient = new ChatClient(loginNickname, RoomName);  // 예시로 "seungeun" 사용
+        ChatClient chatClient = new ChatClient(loginNickname, RoomName); 
         chatClient.setVisible(true);
     }
 }

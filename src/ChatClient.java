@@ -74,7 +74,6 @@ public class ChatClient extends JFrame {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
 
-            // Start a thread to listen for messages from the server
             Thread listenThread = new Thread(new ListenNetwork());
             listenThread.start();
             AppendText("connect" + "\n");
