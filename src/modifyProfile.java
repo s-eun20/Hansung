@@ -108,9 +108,6 @@ public class modifyProfile extends JFrame {
                 
                 JFrame Profile = new Profile(newUserName,newImagePath,loginUserName);
                 Profile.setVisible(true);
-        
-                
-                
 
                 // 수정창 닫기
                 dispose();

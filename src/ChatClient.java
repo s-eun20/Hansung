@@ -14,14 +14,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ChatClient extends JFrame {
 
-    private JPanel contentPane;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
     private JScrollPane chatScrollPane;
     private JTextArea chatTextArea;
     private JScrollPane scrollPane;
@@ -64,10 +66,6 @@ public class ChatClient extends JFrame {
         TextPanel();
         sendButton();
         
-        emojiList = new ArrayList<>();
-        emojiList.add("src/image/상상부기 1.png");
-        emojiList.add("src/image/상상부기 2.png");
-        emojiList.add("src/image/상상부기 3.png");
 
         setContentPane(contentPane);
 
@@ -101,8 +99,29 @@ public class ChatClient extends JFrame {
             AppendText(formattedMessage);
         }
     }
+    
+    public void saveChatRoomToDatabase(String chatRoomName, String loginNickname) {
+        String query = "INSERT INTO ChatRooms (chat_name, user_nickname) VALUES (?, ?)";
+        try (Connection connection = connectToDatabase();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, chatRoomName);
+            preparedStatement.setString(2, loginNickname);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private Connection connectToDatabase() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/Chat";
+        String user = "root";
+        String password = "7981";
+        return DriverManager.getConnection(url, user, password);
+    }
 
-    private void TopPanel() {
+   
+
+	private void TopPanel() {
         contentPane.setLayout(null);
         topPanel = new JPanel();
         topPanel.setBounds(0, 0, 360, 70);
@@ -183,8 +202,6 @@ public class ChatClient extends JFrame {
     // 추가: 다이얼로그를 사용하여 이모티콘 선택
     private String showEmojiSelectionDialog() {
         // 여기에 이모티콘 선택 다이얼로그를 구현하고 선택한 이모티콘을 반환합니다.
-        // 실제 구현은 사용자 경험에 맞게 설계되어야 합니다.
-        // 아래는 간단한 예시 코드입니다.
         Object[] options = {"😃", "😄", "😊", "😉", "😍", "😘", "😜", "😎", "😇", "😏", "😂", "😭", "😱", "😡"};
         int choice = JOptionPane.showOptionDialog(
                 this,
@@ -204,6 +221,8 @@ public class ChatClient extends JFrame {
             return null; // 사용자가 선택하지 않은 경우
         }
     }
+    
+    
 
     // 추가: 이모티콘 전송 버튼 이벤트 핸들러
     private void sendButton() {
@@ -237,6 +256,14 @@ public class ChatClient extends JFrame {
         panel.add(sendButton);
 
         sendButton.setEnabled(false);
+        
+        JButton imagebutton = new JButton("image");
+        imagebutton.setFont(new Font("Dialog", Font.BOLD, 13));
+        imagebutton.setFocusPainted(false);
+        imagebutton.setBorderPainted(false);
+        imagebutton.setBackground(new Color(235, 230, 133));
+        imagebutton.setBounds(77, 8, 82, 25);
+        panel.add(imagebutton);
 
         // Send button click event to send a message
         sendButton.addActionListener(new ActionListener() {
@@ -254,9 +281,9 @@ public class ChatClient extends JFrame {
             String msg = String.format("[%s] %s\n", userName, enteredText);
             SendMessage(msg);
             ChatDatabaseManager.saveChatMessage(roomName, userName, msg);
-            textPane.setText(""); // Clear the message input field after sending
+            textPane.setText(""); 
             textPane.requestFocus();
-            if (msg.contains("/exit")) // Exit handling
+            if (msg.contains("/exit"))
                 System.exit(0);
             buttonState();
         }

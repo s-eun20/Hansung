@@ -113,6 +113,7 @@ public class Profile extends JFrame {
                 
                 ChatClient chatClient1 = new ChatClient(loginName,loginName+","+userName+",");
                 chatClient1.setVisible(true);
+                chatClient1.saveChatRoomToDatabase(loginName+","+userName+",", loginName);
       
                 
                 

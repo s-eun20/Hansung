@@ -19,7 +19,11 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 
 public class LoginUI extends JFrame {
-    private JTextField textField;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField textField;
     private JPasswordField passwordField;
 
     // MySQL Connection 정보
@@ -43,8 +47,6 @@ public class LoginUI extends JFrame {
     public LoginUI() {
         setTitle("Hansung Talk");
         setSize(373, 675);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         JPanel contentPane = new JPanel() {

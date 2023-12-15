@@ -291,7 +291,7 @@ public class ChatList extends JFrame {
         }
 
         JTextPane textPane = new JTextPane();
-        textPane.setPreferredSize(new Dimension(150, 27)); // Set preferred size
+        textPane.setPreferredSize(new Dimension(150, 27)); 
         textPane.setBackground(new Color(0, 0, 0, 0));
         textPane.setEditable(false);
         textPane.setText(textContent.toString());
@@ -299,24 +299,21 @@ public class ChatList extends JFrame {
         // friendPanel에 textPane 추가
         friendPanel.add(textPane);
 
-        // Create a button to open ChatClient
+       
         JButton openChatButton = new JButton("Open Chat");
-        openChatButton.setPreferredSize(new Dimension(120, 27)); // Set preferred size
+        openChatButton.setPreferredSize(new Dimension(120, 27)); 
         friendPanel.add(openChatButton);
 
-        // Add action listener to the button
+        
         openChatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Button click event: open ChatClient with the specified information
+                
                 openChatClient(textContent.toString(), loginNickname);
             }
         });
 
-        // Add friendPanel to chatListScrollPane
         
-
-        // Save selected nicknames to the database
         saveChatRoomToDatabase(textContent.toString(), loginNickname);
         afterCreateChatPanel(textContent.toString(), loginNickname);
 
