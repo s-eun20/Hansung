@@ -11,7 +11,7 @@ public class ChatDatabaseManager {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/Chat";
     private static final String USER = "root";  // 사용자 이름으로 수정
-    private static final String PASSWORD = "7981";  // 비밀번호로 수정
+    private static final String PASSWORD = "0000";  // 비밀번호로 수정
 
     public static void saveChatMessage(String roomID, String sender, String message) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);

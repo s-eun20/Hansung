@@ -30,7 +30,7 @@ public class JoinUI extends JFrame {
     // MySQL Connection 정보
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/Chat";
     private static final String USER = "root";
-    private static final String PASSWORD = "7981";
+    private static final String PASSWORD = "0000";
     
     private JLabel emailLabel;
     private JLabel nicknameLabel;

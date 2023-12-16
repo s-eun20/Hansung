@@ -1,29 +1,44 @@
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ChatClient extends JFrame {
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
-    /**
-	 * 
-	 */
+public class ChatClient extends JFrame {
+	
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+    private JPanel contentPane;
     private JScrollPane chatScrollPane;
     private JTextArea chatTextArea;
     private JScrollPane scrollPane;
@@ -32,6 +47,7 @@ public class ChatClient extends JFrame {
     private JPanel topPanel;
     private JButton sendButton;
     private List<String> emojiList; 
+    private static ChatClient instance;
 
     private Socket socket;
     private DataInputStream dis;
@@ -39,12 +55,16 @@ public class ChatClient extends JFrame {
 
     private String roomName;  // 추가: 현재 사용자가 속한 채팅방의 ID
     private String userName;  // 추가: 사용자 이름
+    
+    public static ChatClient getInstance() {
+        return instance;
+    }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    ChatClient frame = new ChatClient("seungeun","채팅방1");
+                    ChatClient frame = new ChatClient("","");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -55,6 +75,7 @@ public class ChatClient extends JFrame {
 
     public ChatClient(String userName,String roomName) {
     	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    	instance = this;
         this.userName = userName;
         this.roomName=roomName;
 
@@ -66,7 +87,7 @@ public class ChatClient extends JFrame {
         TextPanel();
         sendButton();
         
-
+        
         setContentPane(contentPane);
 
         try {
@@ -74,6 +95,7 @@ public class ChatClient extends JFrame {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
 
+            // Start a thread to listen for messages from the server
             Thread listenThread = new Thread(new ListenNetwork());
             listenThread.start();
             AppendText("connect" + "\n");
@@ -94,10 +116,13 @@ public class ChatClient extends JFrame {
         	String messageText = chatMessage.getMessageText();
         	Integer closingBracketIndex = messageText.indexOf("]");
         	String extractedText = messageText.substring(closingBracketIndex + 2); // +2 to skip "] "
-            String formattedMessage = String.format("[%s] %s - %s\n", chatMessage.getFormattedTimestamp(), chatMessage.getSender(), extractedText);
+            String formattedMessage = String.format("(%s)\n [%s] - %s\n", chatMessage.getFormattedTimestamp(), chatMessage.getSender(), extractedText);
+            //String formattedMessage = String.format("[%s] %s - %s", chatMessage.getSender(), extractedText, chatMessage.getFormattedTimestamp());
             AppendText(formattedMessage);
         }
     }
+    
+    
     
     public void saveChatRoomToDatabase(String chatRoomName, String loginNickname) {
         String query = "INSERT INTO ChatRooms (chat_name, user_nickname) VALUES (?, ?)";
@@ -114,17 +139,16 @@ public class ChatClient extends JFrame {
     private Connection connectToDatabase() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/Chat";
         String user = "root";
-        String password = "7981";
+        String password = "0000";
         return DriverManager.getConnection(url, user, password);
     }
 
-   
 
-	private void TopPanel() {
+    private void TopPanel() {
         contentPane.setLayout(null);
         topPanel = new JPanel();
         topPanel.setBounds(0, 0, 360, 70);
-        topPanel.setBackground(new Color(197, 216, 226));
+        topPanel.setBackground(new Color(216, 236, 254));
         contentPane.add(topPanel);
     }
 
@@ -138,7 +162,7 @@ public class ChatClient extends JFrame {
         chatTextArea = new JTextArea();
         chatTextArea.setFocusable(false);
         chatScrollPane.setViewportView(chatTextArea);
-        chatTextArea.setBackground(new Color(204, 220, 230));
+        chatTextArea.setBackground(new Color(224, 240, 254));
 
         chatScrollPane.setViewportView(chatTextArea);
         contentPane.add(chatScrollPane);
@@ -182,46 +206,6 @@ public class ChatClient extends JFrame {
         });
     }
 
-    private void selectEmoji() {
-        // 여기에 이모티콘 선택 다이얼로그 또는 패널을 구현합니다.
-        // 선택한 이모티콘 정보를 반환받습니다.
-    	
-    	
-        String selectedEmoji = showEmojiSelectionDialog();
-
-         //이모티콘을 메시지로 전송
-        if (selectedEmoji != null) {
-            String msg = String.format("[%s] %s\n", userName, selectedEmoji);
-            SendMessage(msg);
-            ChatDatabaseManager.saveChatMessage(roomName, userName, msg);
-            buttonState();
-        }
-    }
-
-    // 추가: 다이얼로그를 사용하여 이모티콘 선택
-    private String showEmojiSelectionDialog() {
-        // 여기에 이모티콘 선택 다이얼로그를 구현하고 선택한 이모티콘을 반환합니다.
-        Object[] options = {"😃", "😄", "😊", "😉", "😍", "😘", "😜", "😎", "😇", "😏", "😂", "😭", "😱", "😡"};
-        int choice = JOptionPane.showOptionDialog(
-                this,
-                "이모티콘을 선택하세요.",
-                "이모티콘 선택",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
-
-        // 선택한 이모티콘을 반환합니다.
-        if (choice >= 0 && choice < options.length) {
-            return options[choice].toString();
-        } else {
-            return null; // 사용자가 선택하지 않은 경우
-        }
-    }
-    
-    
 
     // 추가: 이모티콘 전송 버튼 이벤트 핸들러
     private void sendButton() {
@@ -234,35 +218,27 @@ public class ChatClient extends JFrame {
         JButton emojiButton = new JButton("😊"); // 이모티콘 선택 버튼
         emojiButton.setFocusPainted(false);
         emojiButton.setBorderPainted(false);
-        emojiButton.setBackground(new Color(235, 230, 133));
+        emojiButton.setBackground(new Color(243, 239, 180));
         emojiButton.setFont(new Font("Dialog", Font.BOLD, 18));
         emojiButton.setBounds(10, 8, 55, 25);
         panel.add(emojiButton);
 
         emojiButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                selectEmoji();
+            public void actionPerformed(ActionEvent e) {
+                ImageViewer imageViewer = new ImageViewer();
+                imageViewer.setVisible(true);
             }
         });
 
         sendButton = new JButton("전송");
         sendButton.setFocusPainted(false);
         sendButton.setBorderPainted(false);
-        sendButton.setBackground(new Color(235, 230, 133));
+        sendButton.setBackground(new Color(243, 239, 180));
         sendButton.setFont(new Font("나눔고딕 ExtraBold", Font.BOLD, 11));
         sendButton.setBounds(277, 8, 68, 25);
         panel.add(sendButton);
 
         sendButton.setEnabled(false);
-        
-        JButton imagebutton = new JButton("image");
-        imagebutton.setFont(new Font("Dialog", Font.BOLD, 13));
-        imagebutton.setFocusPainted(false);
-        imagebutton.setBorderPainted(false);
-        imagebutton.setBackground(new Color(235, 230, 133));
-        imagebutton.setBounds(77, 8, 82, 25);
-        panel.add(imagebutton);
 
         // Send button click event to send a message
         sendButton.addActionListener(new ActionListener() {
@@ -272,17 +248,27 @@ public class ChatClient extends JFrame {
             }
         });
     }
+    
+    public void updateImage(String imagePath) {
+        System.out.println("ChatPanel에서 이미지 업데이트: " + imagePath);
+        String imgTag = String.format("<img src=\"%s\" width=\"30\" height=\"30\">", imagePath);
+        String msg = String.format("[%s]  %s\n", userName, "Image: " + imgTag);
+        AppendText("이미지 출력: " + imagePath + "\n");
+        SendMessage(msg);
+        ChatDatabaseManager.saveChatMessage(roomName, userName, msg);
+    }
+
 
     private void pressEnter() {
         String enteredText = textPane.getText().trim();
 
         if (!enteredText.isEmpty()) {
-            String msg = String.format("[%s] %s\n", userName, enteredText);
+            String msg = String.format("[%s]\n %s\n", userName, enteredText);
             SendMessage(msg);
             ChatDatabaseManager.saveChatMessage(roomName, userName, msg);
-            textPane.setText(""); 
+            textPane.setText(""); // Clear the message input field after sending
             textPane.requestFocus();
-            if (msg.contains("/exit"))
+            if (msg.contains("/exit")) // Exit handling
                 System.exit(0);
             buttonState();
         }

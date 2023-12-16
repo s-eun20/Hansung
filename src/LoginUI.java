@@ -29,7 +29,7 @@ public class LoginUI extends JFrame {
     // MySQL Connection 정보
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/Chat";
     private static final String USER = "root";
-    private static final String PASSWORD = "7981";
+    private static final String PASSWORD = "0000";
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {

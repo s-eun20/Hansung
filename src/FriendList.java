@@ -40,7 +40,7 @@ public class FriendList extends JFrame {
         
 
         panel_1 = createFriendPanel(loadLoggedInUserImagePath(), loadLoggedInUserNickname());
-        panel_1.setBounds(72, 63, 267, 46);
+        panel_1.setBounds(62, 63, 295, 46);
         panel.add(panel_1);
         
         JPanel panel_2 = new JPanel();
@@ -49,15 +49,15 @@ public class FriendList extends JFrame {
         panel_2.setBounds(0, 0, 60, 640);
         panel.add(panel_2);
         
-        JButton mainButton = new JButton("");
+        JButton mainButton = new JButton();
         mainButton.setIcon(new ImageIcon(FriendList.class.getResource("/image/free-icon-person-7542670.png")));
         mainButton.setFocusPainted(false);
         mainButton.setBorderPainted(false);
         mainButton.setBackground(new Color(224, 240, 254));
-        mainButton.setBounds(10, 35, 40, 40);
+        mainButton.setBounds(10, 32, 40, 40);
         panel_2.add(mainButton);
         
-        JButton chatListButton = new JButton("");
+        JButton chatListButton = new JButton();
         chatListButton.setIcon(new ImageIcon(FriendList.class.getResource("/image/free-icon-chat-5962500.png")));
         chatListButton.setFocusPainted(false);
         chatListButton.setBorderPainted(false);
@@ -67,16 +67,16 @@ public class FriendList extends JFrame {
         
         JTextPane textPane_1 = new JTextPane();
         textPane_1.setText("나");
-        textPane_1.setFont(new Font("Dialog", Font.BOLD, 22));
+        textPane_1.setFont(new Font("Dialog", Font.BOLD, 21));
         textPane_1.setEditable(false);
-        textPane_1.setBounds(72, 20, 39, 33);
+        textPane_1.setBounds(72, 25, 39, 33);
         panel.add(textPane_1);
         
         JTextPane textPane_1_1 = new JTextPane();
         textPane_1_1.setText("친구");
-        textPane_1_1.setFont(new Font("Dialog", Font.BOLD, 22));
+        textPane_1_1.setFont(new Font("Dialog", Font.BOLD, 21));
         textPane_1_1.setEditable(false);
-        textPane_1_1.setBounds(72, 119, 60, 33);
+        textPane_1_1.setBounds(71, 125, 60, 33);
         panel.add(textPane_1_1);
         
         chatListButton.addActionListener(new ActionListener() {
@@ -86,14 +86,14 @@ public class FriendList extends JFrame {
             	FriendList.this.dispose();
             }
         });
-        currentY += 50;
+        currentY += 48;
 
         List<String> otherUserNicknames = loadOtherUserNicknames();
         for (int i = 0; i < otherUserNicknames.size(); i++) {
             String otherUserNickname = otherUserNicknames.get(i);
 
             JPanel friendPanel = createFriendPanel(loadUserImagePath(otherUserNickname), otherUserNickname);
-            friendPanel.setBounds(84, currentY, 267, 46);
+            friendPanel.setBounds(62, currentY, 295, 46);
             panel.add(friendPanel);
             currentY += 50;
         }
@@ -189,11 +189,11 @@ public class FriendList extends JFrame {
 
     private JPanel createFriendPanel(String imagePath, String nickname) {
         JPanel friendPanel = new JPanel();
-        friendPanel.setBackground(new Color(224, 240, 254));
+        friendPanel.setBackground(new Color(243, 248, 252));
 
         JTextPane textPane = new JTextPane();
-        textPane.setBounds(56, 0, 72, 27);
-        textPane.setBackground(new Color(0, 0, 0, 0));
+        textPane.setBounds(56, 10, 72, 27);
+        textPane.setBackground(new Color(243, 248, 252));
         textPane.setEditable(false);
         textPane.setText(nickname);
 
@@ -205,7 +205,10 @@ public class FriendList extends JFrame {
         // 프로필 수정 버튼 추가 및 이벤트 처리
        
             profileButton = new JButton("프로필");
-            profileButton.setBounds(164, 10, 91, 23);
+            profileButton.setFont(new Font("굴림", Font.PLAIN, 10));
+            profileButton.setBackground(new Color(243, 248, 252));
+            profileButton.setBorder(BorderFactory.createLineBorder(new Color(192, 192, 192)));
+            profileButton.setBounds(215, 12, 60, 23);
             profileButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -234,12 +237,8 @@ public class FriendList extends JFrame {
     private Connection connectToDatabase() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/Chat";
         String user = "root";
-        String password = "7981";
+        String password = "0000";
         return DriverManager.getConnection(url, user, password);
     }
     
-
-    public static void main(String[] args) {
-    	
-    }
 }

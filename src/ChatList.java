@@ -23,7 +23,7 @@ public class ChatList extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    ChatList frame = new ChatList("seungeun","email");
+                    ChatList frame = new ChatList("","");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -87,12 +87,12 @@ public class ChatList extends JFrame {
         contentPane.add(panel);
         panel.setLayout(null);
 
-        JButton mainButton = new JButton("");
+        JButton mainButton = new JButton();
         mainButton.setIcon(new ImageIcon(ChatList.class.getResource("/image/free-icon-person-7542670.png")));
         mainButton.setFocusPainted(false);
         mainButton.setBorderPainted(false);
         mainButton.setBackground(new Color(224, 240, 254));
-        mainButton.setBounds(10, 35, 40, 40);
+        mainButton.setBounds(10, 32, 40, 40);
         panel.add(mainButton);
 
         mainButton.addActionListener(new ActionListener() {
@@ -103,7 +103,7 @@ public class ChatList extends JFrame {
             }
         });
 
-        JButton chatListButton = new JButton("");
+        JButton chatListButton = new JButton();
         chatListButton.setIcon(new ImageIcon(ChatList.class.getResource("/image/free-icon-chat-5962500.png")));
         chatListButton.setBorderPainted(false);
         chatListButton.setFocusPainted(false);
@@ -123,18 +123,18 @@ public class ChatList extends JFrame {
 
         JTextPane textPane_1 = new JTextPane();
         textPane_1.setEditable(false);
-        textPane_1.setBounds(10, 20, 73, 33);
+        textPane_1.setBounds(10, 25, 73, 33);
         textPane_1.setFont(new Font("나눔고딕", Font.BOLD, 22));
         textPane_1.setText("채팅");
         panel_1.add(textPane_1);
 
         JButton newChatButton = new JButton("채팅방 생성");
         newChatButton.setIcon(null);
-        newChatButton.setFont(new Font("Dialog", Font.BOLD, 15));
+        newChatButton.setFont(new Font("Dialog", Font.PLAIN, 12));
         newChatButton.setFocusPainted(false);
-        newChatButton.setBorderPainted(false);
+        newChatButton.setBorder(BorderFactory.createLineBorder(new Color(192, 192, 192)));
         newChatButton.setBackground(new Color(255, 255, 255));
-        newChatButton.setBounds(184, 31, 140, 22);
+        newChatButton.setBounds(190, 31, 93, 22);
         panel_1.add(newChatButton);
 
         newChatButton.addActionListener(new ActionListener() {
@@ -159,7 +159,7 @@ public class ChatList extends JFrame {
             // Check if loginNickname is in the array
             if (Arrays.asList(nicknames).contains(loginNickname)) {
                 JPanel loadChatPanel2 = loadChatPanel(chatRoomName, loginNickname);
-                loadChatPanel2.setBounds(84, currentY, 267, 46);
+                loadChatPanel2.setBounds(62, currentY, 295, 46);
                 loadChatPanel2.setVisible(true);
                 contentPane.add(loadChatPanel2);
                 currentY += 50;
@@ -193,26 +193,28 @@ public class ChatList extends JFrame {
         }
 		return chatRoomNames;
     }
+    
     private JPanel loadChatPanel(String chatRoomName, String loginNickname) {
         System.out.println(loginNickname);
         JPanel chatPanel = new JPanel();
-        chatPanel.setBackground(new Color(221, 244, 255));
-        chatPanel.setLayout(new BorderLayout()); // 변경된 부분
+        chatPanel.setBackground(new Color(243, 248, 252));
+        chatPanel.setLayout(null);
 
         JTextPane textPane = new JTextPane();
-        textPane.setPreferredSize(new Dimension(150, 27));
-        textPane.setBackground(new Color(0, 0, 0, 0));
+        textPane.setBounds(12, 10, 160, 27);
+        textPane.setBackground(new Color(243, 248, 252));
         textPane.setEditable(false);
         textPane.setText(chatRoomName);
 
-        // textPane를 BorderLayout의 CENTER에 추가
-        chatPanel.add(textPane, BorderLayout.CENTER);
+        chatPanel.add(textPane);
 
         JButton openChatButton = new JButton("Open Chat");
-        openChatButton.setPreferredSize(new Dimension(120, 27));
-
-        // openChatButton를 BorderLayout의 EAST에 추가
-        chatPanel.add(openChatButton, BorderLayout.EAST);
+        openChatButton.setFont(new Font("굴림", Font.PLAIN, 10));
+        openChatButton.setBackground(new Color(243, 248, 252));
+        openChatButton.setBorder(BorderFactory.createLineBorder(new Color(192, 192, 192)));
+        openChatButton.setBounds(200, 12, 75, 23);
+        
+        chatPanel.add(openChatButton);
 
         // Add action listener to the button
         openChatButton.addActionListener(new ActionListener() {
@@ -232,7 +234,7 @@ public class ChatList extends JFrame {
     private Connection connectToDatabase() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/Chat";
         String user = "root";
-        String password = "7981";
+        String password = "0000";
         return DriverManager.getConnection(url, user, password);
     }
     
@@ -270,7 +272,7 @@ public class ChatList extends JFrame {
             for (JCheckBox checkBox : checkBoxes) {
                 if (checkBox.isSelected()) {
                     String friendNickname = checkBox.getText();
-                    System.out.println("," + friendNickname);
+                    System.out.println(", " + friendNickname);
                     selectedFriends.add(friendNickname);
                 }
             }
@@ -282,29 +284,32 @@ public class ChatList extends JFrame {
 
     private void createChatPanel(List<String> selectedFriends, String loginNickname) {
         JPanel friendPanel = new JPanel();
-        friendPanel.setBackground(new Color(221, 244, 255));
-        friendPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        friendPanel.setBackground(new Color(243, 248, 252));
+        friendPanel.setLayout(null);
 
         StringBuilder textContent = new StringBuilder();
         for (String nickname : selectedFriends) {
-            textContent.append(nickname).append(",");
+            textContent.append(nickname).append(", ");
         }
 
         JTextPane textPane = new JTextPane();
-        textPane.setPreferredSize(new Dimension(150, 27)); 
-        textPane.setBackground(new Color(0, 0, 0, 0));
+        textPane.setBounds(12, 10, 160, 27);
+        textPane.setBackground(new Color(243, 248, 252));
         textPane.setEditable(false);
         textPane.setText(textContent.toString());
 
-        // friendPanel에 textPane 추가
         friendPanel.add(textPane);
 
-       
+        // Create a button to open ChatClient
         JButton openChatButton = new JButton("Open Chat");
-        openChatButton.setPreferredSize(new Dimension(120, 27)); 
+        openChatButton.setFont(new Font("굴림", Font.PLAIN, 10));
+        openChatButton.setBackground(new Color(243, 248, 252));
+        openChatButton.setBorder(BorderFactory.createLineBorder(new Color(192, 192, 192)));
+        openChatButton.setBounds(200, 12, 75, 23);
+        
         friendPanel.add(openChatButton);
 
-        
+        // Add action listener to the button
         openChatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -332,9 +337,6 @@ public class ChatList extends JFrame {
         contentPane.repaint();
 		
 	}
-
-
-
 
 	// friendPanel 클릭 시 ChatClient 실행 및 textContent 전달
     private void openChatClient(String RoomName, String loginNickname) {
