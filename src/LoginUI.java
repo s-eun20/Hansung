@@ -18,7 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
-public class LoginUI extends JFrame {
+public class LoginUI extends JFrame { 
     /**
 	 * 
 	 */
@@ -50,7 +50,12 @@ public class LoginUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         JPanel contentPane = new JPanel() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 ImageIcon icon = new ImageIcon("src/image/상상부기 1.png");
@@ -113,22 +118,22 @@ public class LoginUI extends JFrame {
         emailLabel_1.setBounds(57, 443, 50, 21);
         contentPane.add(emailLabel_1);
 
-        loginButton.addActionListener(new ActionListener() {
+        loginButton.addActionListener(new ActionListener() { // 로그인 버튼을 눌렀을 때
             @Override
             public void actionPerformed(ActionEvent e) {
-                login();
+                login(); // 로그인 함수 실행
             }
         });
 
-        registerButton.addActionListener(new ActionListener() {
+        registerButton.addActionListener(new ActionListener() { // 가입 버튼 눌렀을 때
             @Override
             public void actionPerformed(ActionEvent e) {
-                openJoinUI();
+                openJoinUI(); // 가입 함수 실행
             }
         });
     }
 
-    private void login() {
+    private void login() { 
         String email = textField.getText();
         char[] passwordChars = passwordField.getPassword();
         String password = new String(passwordChars);
@@ -138,7 +143,7 @@ public class LoginUI extends JFrame {
             EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     try {
-                        FriendList frame = new FriendList(email);
+                        FriendList frame = new FriendList(email); // 친구목록을 띄워줌
                         frame.setVisible(true);
                         setVisible(false);
                     } catch (Exception e) {
@@ -164,7 +169,7 @@ public class LoginUI extends JFrame {
         });
     }
 
-    private boolean validateUser(String email, String password) {
+    private boolean validateUser(String email, String password) { // 데이터 베이스에 저장된 정보와 일치하는지 확인
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String query = "SELECT * FROM users WHERE email = ? AND password = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
