@@ -235,7 +235,7 @@ public class ChatList extends JFrame {
 	private Connection connectToDatabase() throws SQLException {
 		String url = "jdbc:mysql://localhost:3306/Chat";
 		String user = "root";
-		String password = "1220";
+		String password = "0000";
 		return DriverManager.getConnection(url, user, password);
 	}
 
