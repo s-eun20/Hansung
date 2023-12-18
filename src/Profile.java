@@ -8,9 +8,6 @@ public class Profile extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JPanel panel;
-    private JButton marks;
-
-    private boolean mark = false;
 
     /**
      * Launch the application.
@@ -64,27 +61,6 @@ public class Profile extends JFrame {
         userName.setText(userNickname);
         userName.setBounds(152, 427, 117, 31);
         panel.add(userName);
-
-        //프로필 즐겨 찾기 기능 버튼 생성
-        marks = new JButton();
-        marks.setFocusPainted(false);
-        marks.setBorderPainted(false);
-        marks.setBackground(new Color(235, 235, 235));
-        marks.setBounds(12, 12, 25, 25);
-        panel.add(marks);
-
-        //즐겨 찾기 여부
-        marks.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if(mark){
-                    setMark();
-                }
-                else{
-                    setMark();
-                }
-            }
-        });
 
         JTextPane textPane_2 = new JTextPane();
         textPane_2.setForeground(new Color(87, 87, 87));
@@ -151,15 +127,5 @@ public class Profile extends JFrame {
         textPane_1.setText("프로필 편집");
         textPane_1.setBounds(199, 590, 70, 21);
         panel.add(textPane_1);
-    }
-
-    //즐겨 찾기 표시
-    private void setMark(){
-        mark = !mark;
-        if(mark)
-            marks.setBackground(new Color(237, 199, 204));
-        else
-            marks.setBackground(new Color(235, 235, 235));
-
     }
 }

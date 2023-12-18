@@ -49,7 +49,7 @@ public class JoinUI extends JFrame {
         });
     }
 
-    public JoinUI() {
+    public JoinUI() { // 전체적인 디자인은 LoginUI와 동일
         setTitle("회원가입");
         setSize(373, 675);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +57,12 @@ public class JoinUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 373, 675);
         contentPane = new JPanel() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 ImageIcon icon = new ImageIcon("src/image/상상부기 1.png");
@@ -121,10 +126,12 @@ public class JoinUI extends JFrame {
         passwordLabel.setForeground(new Color(0, 0, 0));
         contentPane.add(passwordLabel);
 
-        joinButton.addActionListener(new ActionListener() {
+        joinButton.addActionListener(new ActionListener() { // 가입 버튼을 눌렀을 때
             @Override
             public void actionPerformed(ActionEvent e) {
-                register();
+                register(); // 가입 함수실행
+                JFrame loginUI = new LoginUI(); // 다시 로그인 화면을 띄움
+                loginUI.setVisible(true);
             }
         });
         
@@ -140,7 +147,7 @@ public class JoinUI extends JFrame {
         char[] passwordChars = passwordField.getPassword();
         String password = new String(passwordChars);
 
-        if (!userExists(email)) {
+        if (!userExists(email)) { // 이미 가입된 계정 확인
             saveUserToDatabase(email, nickname, password);
             System.out.println("회원가입 성공!");
             // 회원가입 성공 후 다른 동작을 수행하거나 창을 닫을 수 있습니다.
@@ -149,7 +156,7 @@ public class JoinUI extends JFrame {
         }
     }
 
-    private boolean userExists(String email) {
+    private boolean userExists(String email) { // 데이터베이스에서 가입된 계정이 있는지 확인하는 함수
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String query = "SELECT * FROM users WHERE email = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -164,6 +171,7 @@ public class JoinUI extends JFrame {
         return false;
     }
 
+    // 데이터베이스에 가입된 정보를 저장하는 함수
     private void saveUserToDatabase(String email, String nickname, String password) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String query = "INSERT INTO users (email, nickname, password) VALUES (?, ?, ?)";

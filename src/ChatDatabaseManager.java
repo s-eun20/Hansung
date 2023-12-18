@@ -13,6 +13,7 @@ public class ChatDatabaseManager {
     private static final String USER = "root";  // 사용자 이름으로 수정
     private static final String PASSWORD = "0000";  // 비밀번호로 수정
 
+    //채팅 메시지를 데이터베이스에 저장 메소드
     public static void saveChatMessage(String roomID, String sender, String message) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -30,12 +31,15 @@ public class ChatDatabaseManager {
         }
     }
 
+    //현재 시간을 문자열 형태로 반환 메소드
     private static String getCurrentTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
     }
     
+    //지정된 채팅 방의 채팅 기록을 데이터베이스에서 불러오는 메소드
     public static List<ChatMessage> loadChatHistory(String roomName) {
+    	//채팅 기록을 담을 리스트 생성
         List<ChatMessage> chatHistory = new ArrayList<>();
 
         String query = "SELECT Sender, MessageText, timestamp FROM ChatMessages WHERE RoomId = ? ORDER BY timestamp ASC";
@@ -50,6 +54,7 @@ public class ChatDatabaseManager {
                     String messageText = resultSet.getString("MessageText");
                     long timestamp = resultSet.getTimestamp("timestamp").getTime();
 
+                    //ChatMessage 객체 생성 및 리스트에 추가
                     ChatMessage chatMessage = new ChatMessage(sender, messageText, timestamp);
                     chatHistory.add(chatMessage);
                 }
@@ -58,6 +63,7 @@ public class ChatDatabaseManager {
             e.printStackTrace();
         }
 
+        //최종적으로 채팅 기록이 담긴 리스트 반환
         return chatHistory;
     }
 

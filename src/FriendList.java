@@ -19,7 +19,7 @@ public class FriendList extends JFrame {
     private JPanel panel;
     private JPanel panel_1;
 
-    public FriendList(String currentUserEmail) {
+    public FriendList(String currentUserEmail) { // LoginUI에서 로그인된 계정을 매개변수로 받아옴
         this.currentUserEmail = currentUserEmail;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 373, 675);
@@ -39,7 +39,7 @@ public class FriendList extends JFrame {
         int currentY = 119;
         
 
-        panel_1 = createFriendPanel(loadLoggedInUserImagePath(), loadLoggedInUserNickname());
+        panel_1 = createFriendPanel(loadLoggedInUserImagePath(), loadLoggedInUserNickname()); // 로그인된 계정의 이미지, 닉네임을 매개변수로 줌
         panel_1.setBounds(62, 63, 295, 46);
         panel.add(panel_1);
         
@@ -57,7 +57,7 @@ public class FriendList extends JFrame {
         mainButton.setBounds(10, 32, 40, 40);
         panel_2.add(mainButton);
         
-        JButton chatListButton = new JButton();
+        JButton chatListButton = new JButton(); 
         chatListButton.setIcon(new ImageIcon(FriendList.class.getResource("/image/free-icon-chat-5962500.png")));
         chatListButton.setFocusPainted(false);
         chatListButton.setBorderPainted(false);
@@ -79,17 +79,17 @@ public class FriendList extends JFrame {
         textPane_1_1.setBounds(71, 125, 60, 33);
         panel.add(textPane_1_1);
         
-        chatListButton.addActionListener(new ActionListener() {
+        chatListButton.addActionListener(new ActionListener() { // 채팅 아이콘 클릭
             public void actionPerformed(ActionEvent e) {
-            	ChatList list = new ChatList(currentUserEmail,loadLoggedInUserNickname());
+            	ChatList list = new ChatList(currentUserEmail,loadLoggedInUserNickname()); // 채팅목록 화면 창 띄움
             	list.setVisible(true);
-            	FriendList.this.dispose();
+            	FriendList.this.dispose(); 
             }
         });
         currentY += 48;
 
-        List<String> otherUserNicknames = loadOtherUserNicknames();
-        for (int i = 0; i < otherUserNicknames.size(); i++) {
+        List<String> otherUserNicknames = loadOtherUserNicknames(); // 로그인한 계정 제외한 친구목록 가져옴
+        for (int i = 0; i < otherUserNicknames.size(); i++) { // 친구목록 출력
             String otherUserNickname = otherUserNicknames.get(i);
 
             JPanel friendPanel = createFriendPanel(loadUserImagePath(otherUserNickname), otherUserNickname);
@@ -131,7 +131,7 @@ public class FriendList extends JFrame {
     }
 
 
-    private String loadLoggedInUserNickname() {
+    private String loadLoggedInUserNickname() { // 생성자에서 매개변수로 받아온 로그인한 계정을 이용해 데이터베이스에서 닉네임을 얻어옴
         String query = "SELECT nickname FROM users WHERE email = ?";
         try (Connection connection = connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -147,7 +147,7 @@ public class FriendList extends JFrame {
         return "";
     }
 
-    private List<String> loadOtherUserNicknames() {
+    private List<String> loadOtherUserNicknames() { // 로그인한 계정 제외 친구 닉네임을 데이터베이스에서 가져옴
         List<String> nicknames = new ArrayList<>();
         String query = "SELECT nickname FROM users WHERE email != ?";
         try (Connection connection = connectToDatabase();
@@ -163,28 +163,6 @@ public class FriendList extends JFrame {
             e.printStackTrace();
         }
         return nicknames;
-    }
-    
-    
-    private void saveImagePathToDatabase(String imagePath, String nickname) {
-    	
-        String query = "UPDATE users SET image_path = ? WHERE nickname = ?";
-
-        try (Connection connection = connectToDatabase();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, imagePath);
-            preparedStatement.setString(2, nickname);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("이미지 경로가 업데이트되었습니다.");
-            } else {
-                System.out.println("이미지 경로 업데이트에 실패했습니다.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     private JPanel createFriendPanel(String imagePath, String nickname) {
@@ -209,7 +187,7 @@ public class FriendList extends JFrame {
             profileButton.setBackground(new Color(243, 248, 252));
             profileButton.setBorder(BorderFactory.createLineBorder(new Color(192, 192, 192)));
             profileButton.setBounds(215, 12, 60, 23);
-            profileButton.addActionListener(new ActionListener() {
+            profileButton.addActionListener(new ActionListener() { // "프로필" 버튼을 눌렀을 때
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     openProfile(nickname,imagePath,loadLoggedInUserNickname());
@@ -230,11 +208,12 @@ public class FriendList extends JFrame {
 
 
     private void openProfile(String userNickname,String imagePath,String login) {
-        Profile profileWindow = new Profile(userNickname,imagePath,login);
+        Profile profileWindow = new Profile(userNickname,imagePath,login); // 프로필 창 띄워줌
         profileWindow.setVisible(true);
     }
 
     private Connection connectToDatabase() throws SQLException {
+    	// 데이터베이스 정보
         String url = "jdbc:mysql://localhost:3306/Chat";
         String user = "root";
         String password = "0000";
