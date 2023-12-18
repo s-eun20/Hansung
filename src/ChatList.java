@@ -53,25 +53,27 @@ public class ChatList extends JFrame {
 		setContentPane(contentPane);
 	}
 
-	// 현재 사용자를 제외한 모든 사용자의 닉네임을 데이터베이스에서 불러오는 메소드
+	// 현재 사용자를 포함한 모든 사용자 닉네임을 불러오기
 	private List<String> loadFriendList(String currentUserEmail) {
-		// 사용자의 닉네임을 담을 리스트 생성
-		List<String> nicknames = new ArrayList<>();
-		String query = "SELECT nickname FROM users WHERE email != ?";
-		try (Connection connection = connectToDatabase();
-				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-			preparedStatement.setString(1, currentUserEmail);
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				nicknames.clear(); // Clear existing data and fetch fresh data
-				while (resultSet.next()) {
-					nicknames.add(resultSet.getString("nickname"));
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return nicknames;
+	    // 사용자의 닉네임을 담을 리스트 생성
+	    List<String> nicknames = new ArrayList<>();
+	    String query = "SELECT nickname FROM users WHERE email != ? OR email = ?";
+	    try (Connection connection = connectToDatabase();
+	         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+	        preparedStatement.setString(1, currentUserEmail);
+	        preparedStatement.setString(2, currentUserEmail);
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            nicknames.clear(); // Clear existing data and fetch fresh data
+	            while (resultSet.next()) {
+	                nicknames.add(resultSet.getString("nickname"));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return nicknames;
 	}
+
 
 	// 친구 목록, 채팅 목록 이동 버튼 (좌측 버튼 2개)
 	private void setMenu(String loginEmail) {
@@ -233,7 +235,7 @@ public class ChatList extends JFrame {
 	private Connection connectToDatabase() throws SQLException {
 		String url = "jdbc:mysql://localhost:3306/Chat";
 		String user = "root";
-		String password = "0000";
+		String password = "1220";
 		return DriverManager.getConnection(url, user, password);
 	}
 
@@ -287,7 +289,7 @@ public class ChatList extends JFrame {
 
 		StringBuilder textContent = new StringBuilder();
 		for (String nickname : selectedFriends) {
-			textContent.append(nickname).append(", ");
+			textContent.append(nickname).append(",");
 		}
 
 		JTextPane textPane = new JTextPane();
