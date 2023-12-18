@@ -90,6 +90,7 @@ public class FriendList extends JFrame {
 
         List<String> otherUserNicknames = loadOtherUserNicknames(); // 로그인한 계정 제외한 친구목록 가져옴
         for (int i = 0; i < otherUserNicknames.size(); i++) { // 친구목록 출력
+            String imagePath = "src/image/상상부기 " + (i + 2) + ".png";
             String otherUserNickname = otherUserNicknames.get(i);
 
             JPanel friendPanel = createFriendPanel(loadUserImagePath(otherUserNickname), otherUserNickname);
